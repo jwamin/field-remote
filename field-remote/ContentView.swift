@@ -3,7 +3,7 @@ import CoreBluetooth
 // MARK: - Root
 
 struct ContentView: View {
-    @StateObject private var midi = BLEMIDIManager()
+    @ObservedObject var midi: BLEMIDIManager
     @State private var showDevicePicker = false
 
     var body: some View {
@@ -611,5 +611,5 @@ private extension Comparable {
 // MARK: - Preview
 
 #Preview {
-    ContentView()
+    ContentView(midi: BLEMIDIManager())
 }

@@ -87,6 +87,11 @@ class BLEMIDIManager: NSObject, ObservableObject {
         send([0xB0 | (channel & 0x0F), number, value & 0x7F])
     }
 
+    /// Program change on a given 0-based channel (0 = ch 1)
+    func programChange(program: UInt8, channel: UInt8 = 0) {
+        send([0xC0 | (channel & 0x0F), program & 0x7F])
+    }
+
     // Convenience wrappers matching the TP-7 MIDI spec
 
     /// Mix volume  CC7  ch 1-6 (pass channel 1-6)
