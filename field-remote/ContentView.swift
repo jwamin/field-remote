@@ -32,13 +32,13 @@ struct ContentView: View {
             }
             .navigationTitle(midi.connectionState == .connected
                              ? midi.effectiveDeviceProfile.navigationTitle
-                             : "ble remote")
+                             : "field remote")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(midi.connectionState == .connected
                          ? midi.effectiveDeviceProfile.navigationTitle
-                         : "ble remote")
+                         : "field remote")
                         .font(.system(.headline, design: .monospaced))
                 }
             }
