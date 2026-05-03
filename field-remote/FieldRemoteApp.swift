@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct TP7RemoteApp: App {
+struct FieldRemoteApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

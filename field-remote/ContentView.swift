@@ -14,28 +14,31 @@ struct ContentView: View {
                         .padding(.bottom, 1)
 
                     if midi.connectionState == .connected {
-                        TransportSection(midi: midi)
-                        Divider().padding(.vertical, 1)
-                        SpeedSection(midi: midi)
-                        Divider().padding(.vertical, 1)
-                        LoopSection(midi: midi)
-                        Divider().padding(.vertical, 1)
-                        ScrubSection(midi: midi)
-                        Divider().padding(.vertical, 1)
-                        MixSection(midi: midi)
-                        Divider().padding(.vertical, 1)
-                        InputSection(midi: midi)
-                        Spacer(minLength: 32)
+                        if midi.inferredDeviceProfile == nil {
+                            UnknownProfileBar(midi: midi)
+                        }
+                        Group {
+                            switch midi.effectiveDeviceProfile {
+                            case .tp7:
+                                TP7ConnectedPanels(midi: midi)
+                            case .tx6:
+                                TX6ControlsView(midi: midi)
+                            }
+                        }
                     } else {
                         DisconnectedPrompt(state: midi.connectionState)
                     }
                 }
             }
-            .navigationTitle("tp-7 remote")
+            .navigationTitle(midi.connectionState == .connected
+                             ? midi.effectiveDeviceProfile.navigationTitle
+                             : "ble remote")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("tp-7 remote")
+                    Text(midi.connectionState == .connected
+                         ? midi.effectiveDeviceProfile.navigationTitle
+                         : "ble remote")
                         .font(.system(.headline, design: .monospaced))
                 }
             }
@@ -167,6 +170,70 @@ private struct DevicePickerSheet: View {
     }
 }
 
+// MARK: - Profile fallback (name did not match TP-7 / TX-6)
+
+private struct UnknownProfileBar: View {
+    @ObservedObject var midi: BLEMIDIManager
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("could not detect device from name — choose profile (default is TP-7).")
+                .font(.system(.caption2, design: .monospaced))
+                .foregroundStyle(.secondary)
+            HStack {
+                Text("profile")
+                    .font(.system(.caption, design: .monospaced))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Menu {
+                    Button("automatic (TP-7 if unsure)") {
+                        midi.deviceProfileOverride = nil
+                    }
+                    Button("TP-7") { midi.deviceProfileOverride = .tp7 }
+                    Button("TX-6") { midi.deviceProfileOverride = .tx6 }
+                } label: {
+                    Text(profileLabel)
+                        .font(.system(.caption, design: .monospaced))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(.quaternary)
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                }
+            }
+        }
+        .padding()
+        .background(Color.orange.opacity(0.12))
+    }
+
+    private var profileLabel: String {
+        if let o = midi.deviceProfileOverride { return o.shortTitle }
+        return "tp-7 (default)"
+    }
+}
+
+// MARK: - TP-7 panels
+
+private struct TP7ConnectedPanels: View {
+    @ObservedObject var midi: BLEMIDIManager
+
+    var body: some View {
+        VStack(spacing: 0) {
+            TransportSection(midi: midi)
+            Divider().padding(.vertical, 1)
+            SpeedSection(midi: midi)
+            Divider().padding(.vertical, 1)
+            LoopSection(midi: midi)
+            Divider().padding(.vertical, 1)
+            ScrubSection(midi: midi)
+            Divider().padding(.vertical, 1)
+            MixSection(midi: midi)
+            Divider().padding(.vertical, 1)
+            InputSection(midi: midi)
+            Spacer(minLength: 32)
+        }
+    }
+}
+
 // MARK: - Disconnected prompt
 
 private struct DisconnectedPrompt: View {
@@ -180,7 +247,7 @@ private struct DisconnectedPrompt: View {
                 .foregroundStyle(.tertiary)
             Text(state == .bluetoothOff
                  ? "enable bluetooth to continue"
-                 : "scan to connect to your tp-7")
+                 : "scan to connect to your tp-7 or tx-6")
                 .font(.system(.body, design: .monospaced))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
