@@ -6,9 +6,17 @@ Repository: [github.com/jwamin/field-remote](https://github.com/jwamin/field-rem
 
 ## Screenshots
 
+### macOS
+
 | TP-7 | TX-6 |
 |------|------|
 | ![TP-7 controls](screenshots/tp7.png) | ![TX-6 controls](screenshots/tx6.png) |
+
+### iPhone
+
+| TP-7 | TX-6 |
+|------|------|
+| ![TP-7 iPhone](screenshots/tp7-iphone.png) | ![TX-6 iPhone](screenshots/tx6-iphone.png) |
 
 ## Requirements
 

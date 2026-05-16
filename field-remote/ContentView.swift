@@ -677,3 +677,16 @@ private extension Comparable {
         TP7ConnectedPanels(midi: BLEMIDIManager())
     }
 }
+
+#Preview("TP-7 iPhone") {
+    NavigationStack {
+        ScrollView {
+            TP7ConnectedPanels(midi: BLEMIDIManager())
+        }
+        .navigationTitle("tp-7")
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
+    }
+    .frame(width: 390, height: 844)
+}

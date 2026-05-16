@@ -268,3 +268,16 @@ private struct SectionHeaderTX6: View {
         TX6ControlsView(midi: BLEMIDIManager())
     }
 }
+
+#Preview("TX-6 iPhone") {
+    NavigationStack {
+        ScrollView {
+            TX6ControlsView(midi: BLEMIDIManager())
+        }
+        .navigationTitle("tx-6")
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
+    }
+    .frame(width: 390, height: 844)
+}
