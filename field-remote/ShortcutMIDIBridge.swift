@@ -1,6 +1,27 @@
 import Foundation
 
-/// Holds the live `BLEMIDIManager` from the SwiftUI app so Siri Shortcuts / App Intents can send MIDI on the same connection.
+// MARK: - Known devices store
+
+/// Persists BLE device names seen during successful connections so the Shortcuts
+/// composer can offer them as selectable options.
+enum KnownDevicesStore {
+    private static let key = "field_remote_known_devices"
+
+    static var deviceNames: [String] {
+        UserDefaults.standard.stringArray(forKey: key) ?? []
+    }
+
+    static func record(name: String) {
+        var names = deviceNames
+        guard !names.contains(name) else { return }
+        names.insert(name, at: 0)           // most-recently-seen first
+        UserDefaults.standard.set(names, forKey: key)
+    }
+}
+
+// MARK: - Bridge
+
+/// Holds the live `BLEMIDIManager` so App Intents can send MIDI on the same connection.
 @MainActor
 enum ShortcutMIDIBridge {
     private static weak var _midi: BLEMIDIManager?
@@ -10,4 +31,7 @@ enum ShortcutMIDIBridge {
     }
 
     static var midi: BLEMIDIManager? { _midi }
+
+    /// Display name of the currently-connected peripheral, or nil if not connected.
+    static var connectedDeviceName: String? { _midi?.connectedDeviceName }
 }

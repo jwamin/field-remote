@@ -27,6 +27,12 @@ class BLEMIDIManager: NSObject, ObservableObject {
         deviceProfileOverride ?? inferredDeviceProfile ?? .tp7
     }
 
+    /// Best available display name for the currently-connected peripheral.
+    var connectedDeviceName: String? {
+        guard let device = connectedDevice else { return nil }
+        return device.name ?? advertisementLocalNames[device.identifier]
+    }
+
     override init() {
         super.init()
         central = CBCentralManager(delegate: self, queue: .main)
@@ -222,6 +228,9 @@ extension BLEMIDIManager: CBCentralManagerDelegate {
         let displayName = peripheral.name
             ?? advertisementLocalNames[peripheral.identifier]
         inferredDeviceProfile = RemoteDeviceProfile.infer(fromName: displayName)
+        if let name = displayName {
+            KnownDevicesStore.record(name: name)
+        }
         peripheral.delegate = self
         peripheral.discoverServices([Self.midiServiceUUID])
     }
