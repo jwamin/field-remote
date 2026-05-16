@@ -90,7 +90,7 @@ struct SendMIDIProgramChangeIntent: AppIntent {
 
 struct FieldRemoteMIDIAppShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
-        [
+        return [
             AppShortcut(
                 intent: SendMIDIControlChangeIntent(),
                 phrases: [
@@ -108,7 +108,7 @@ struct FieldRemoteMIDIAppShortcuts: AppShortcutsProvider {
                 ],
                 shortTitle: "Send PC",
                 systemImageName: "pianokeys"
-            ),
+            )
         ]
     }
 }

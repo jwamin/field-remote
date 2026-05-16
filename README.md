@@ -4,10 +4,16 @@ SwiftUI **BLE MIDI** remote for **Teenage Engineering** field gear: **TP-7** (re
 
 Repository: [github.com/jwamin/field-remote](https://github.com/jwamin/field-remote)
 
+## Screenshots
+
+| TP-7 | TX-6 |
+|------|------|
+| ![TP-7 controls](screenshots/tp7.png) | ![TX-6 controls](screenshots/tx6.png) |
+
 ## Requirements
 
-- Xcode 15+ (project uses a recent SwiftUI / SDK; adjust deployment targets in Xcode if needed)
-- iPhone or iPad with Bluetooth
+- Xcode 16+ (project uses a recent SwiftUI / SDK; adjust deployment targets in Xcode if needed)
+- iPhone, iPad, or Mac with Bluetooth
 - A TP-7, TX-6, or other peripheral that exposes standard **BLE MIDI**
 
 ## Project layout
@@ -19,6 +25,8 @@ Repository: [github.com/jwamin/field-remote](https://github.com/jwamin/field-rem
 | `field-remote/ContentView.swift` | Connection UI, device profile routing, TP-7 panels |
 | `field-remote/TX6ControlsView.swift` | TX-6 control surface |
 | `field-remote/DeviceProfile.swift` | `RemoteDeviceProfile` + name-based inference |
+| `field-remote/MIDIAppIntents.swift` | Siri Shortcuts App Intents (CC, program change) |
+| `field-remote/ShortcutMIDIBridge.swift` | Bridge between App Intents and BLE MIDI manager |
 | `field-remote/FieldRemoteApp.swift` | App entry (`@main`) |
 
 ## Building
@@ -30,6 +38,13 @@ Repository: [github.com/jwamin/field-remote](https://github.com/jwamin/field-rem
 ## BLE MIDI
 
 The app uses the [MIDI over Bluetooth Low Energy](https://www.midi.org/specifications-old/item/bluetooth-le-midi) service (`03B80E5A-EDE8-4B33-A751-6CE34EC4C700`) and characteristic `7772E5DB-3868-4112-A1A9-F2669D106BF3`.
+
+## Siri Shortcuts
+
+The app exposes App Intents for Siri and the Shortcuts app:
+
+- **Send CC** — send a MIDI Control Change message (controller 0–127, value 0–127)
+- **Send Program Change** — switch program/patch (0–127)
 
 ## License
 

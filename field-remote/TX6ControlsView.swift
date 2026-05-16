@@ -262,3 +262,9 @@ private struct SectionHeaderTX6: View {
             .padding(.bottom, 4)
     }
 }
+
+#Preview("TX-6 controls") {
+    ScrollView {
+        TX6ControlsView(midi: BLEMIDIManager())
+    }
+}

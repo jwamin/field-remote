@@ -113,8 +113,14 @@ class BLEMIDIManager: NSObject, ObservableObject {
     /// Loop mode  CC17  0=off 1=in 2=out
     func loopMode(_ mode: UInt8) { cc(17, value: mode) }
 
-    /// Fast fwd / rew  CC18  MIDI value 0-127 (64 = stopped)
+    /// Fast fwd / rew  CC18  MIDI value 0-127 (64 = centre)
+    static let scrubPauseValue: UInt8 = 64
+    /// +4 from centre — normal playback (TP-7 has no dedicated play CC)
+    static let scrubPlayValue: UInt8 = 68
+
     func scrub(_ midiValue: UInt8) { cc(18, value: midiValue) }
+    func scrubPlay()  { scrub(Self.scrubPlayValue) }
+    func scrubPause() { scrub(Self.scrubPauseValue) }
 
     /// Mix mute  CC120  ch 1-6
     func mixMute(_ muted: Bool, channel: Int) {
@@ -181,7 +187,7 @@ class BLEMIDIManager: NSObject, ObservableObject {
 
 // MARK: - CBCentralManagerDelegate
 
-extension BLEMIDIManager: @preconcurrency CBCentralManagerDelegate {
+extension BLEMIDIManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
@@ -240,7 +246,7 @@ extension BLEMIDIManager: @preconcurrency CBCentralManagerDelegate {
 
 // MARK: - CBPeripheralDelegate
 
-extension BLEMIDIManager: @preconcurrency CBPeripheralDelegate {
+extension BLEMIDIManager: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         peripheral.services?
             .filter { $0.uuid == Self.midiServiceUUID }
