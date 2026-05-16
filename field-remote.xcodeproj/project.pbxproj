@@ -12,37 +12,37 @@
 			containerPortal = 084EBB1B2FA78D8D00F3F30C /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 084EBB222FA78D8D00F3F30C;
-			remoteInfo = field-remote;
+			remoteInfo = "field-remote";
 		};
 		084EBB402FA78D8E00F3F30C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 084EBB1B2FA78D8D00F3F30C /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 084EBB222FA78D8D00F3F30C;
-			remoteInfo = field-remote;
+			remoteInfo = "field-remote";
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		084EBB232FA78D8D00F3F30C /* field-remote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = field-remote.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		084EBB352FA78D8E00F3F30C /* field-remoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = field-remoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		084EBB3F2FA78D8E00F3F30C /* field-remoteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = field-remoteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		084EBB232FA78D8D00F3F30C /* field-remote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "field-remote.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		084EBB352FA78D8E00F3F30C /* field-remoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "field-remoteTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		084EBB3F2FA78D8E00F3F30C /* field-remoteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "field-remoteUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		084EBB252FA78D8D00F3F30C /* field-remote */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = field-remote;
+			path = "field-remote";
 			sourceTree = "<group>";
 		};
 		084EBB382FA78D8E00F3F30C /* field-remoteTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = field-remoteTests;
+			path = "field-remoteTests";
 			sourceTree = "<group>";
 		};
 		084EBB422FA78D8E00F3F30C /* field-remoteUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = field-remoteUITests;
+			path = "field-remoteUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -110,10 +110,10 @@
 			fileSystemSynchronizedGroups = (
 				084EBB252FA78D8D00F3F30C /* field-remote */,
 			);
-			name = field-remote;
+			name = "field-remote";
 			packageProductDependencies = (
 			);
-			productName = field-remote;
+			productName = "field-remote";
 			productReference = 084EBB232FA78D8D00F3F30C /* field-remote.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -133,10 +133,10 @@
 			fileSystemSynchronizedGroups = (
 				084EBB382FA78D8E00F3F30C /* field-remoteTests */,
 			);
-			name = field-remoteTests;
+			name = "field-remoteTests";
 			packageProductDependencies = (
 			);
-			productName = field-remoteTests;
+			productName = "field-remoteTests";
 			productReference = 084EBB352FA78D8E00F3F30C /* field-remoteTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -156,10 +156,10 @@
 			fileSystemSynchronizedGroups = (
 				084EBB422FA78D8E00F3F30C /* field-remoteUITests */,
 			);
-			name = field-remoteUITests;
+			name = "field-remoteUITests";
 			packageProductDependencies = (
 			);
-			productName = field-remoteUITests;
+			productName = "field-remoteUITests";
 			productReference = 084EBB3F2FA78D8E00F3F30C /* field-remoteUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -388,9 +388,9 @@
 		084EBB4A2FA78D8E00F3F30C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "field-remote";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = field-remote/field-remote.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "field-remote/field-remote.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3C42F7N9CQ;
@@ -434,9 +434,9 @@
 		084EBB4B2FA78D8E00F3F30C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "field-remote";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = field-remote/field-remote.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "field-remote/field-remote.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3C42F7N9CQ;
@@ -549,7 +549,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = field-remote;
+				TEST_TARGET_NAME = "field-remote";
 				XROS_DEPLOYMENT_TARGET = 26.4;
 			};
 			name = Debug;
@@ -574,7 +574,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_TARGET_NAME = field-remote;
+				TEST_TARGET_NAME = "field-remote";
 				XROS_DEPLOYMENT_TARGET = 26.4;
 			};
 			name = Release;

@@ -5,13 +5,13 @@ import Foundation
 /// Persists BLE device names seen during successful connections so the Shortcuts
 /// composer can offer them as selectable options.
 enum KnownDevicesStore {
-    private static let key = "field_remote_known_devices"
+    private nonisolated static var key: String { "field_remote_known_devices" }
 
-    static var deviceNames: [String] {
+    nonisolated static var deviceNames: [String] {
         UserDefaults.standard.stringArray(forKey: key) ?? []
     }
 
-    static func record(name: String) {
+    nonisolated static func record(name: String) {
         var names = deviceNames
         guard !names.contains(name) else { return }
         names.insert(name, at: 0)           // most-recently-seen first
