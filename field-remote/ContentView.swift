@@ -5,6 +5,8 @@ import CoreBluetooth
 struct ContentView: View {
     @ObservedObject var midi: BLEMIDIManager
     @State private var showDevicePicker = false
+    @State private var showChartImport = false
+    @State private var customControls: [MIDIControlDef] = []
 
     var body: some View {
         NavigationStack {
@@ -14,15 +16,19 @@ struct ContentView: View {
                         .padding(.bottom, 1)
 
                     if midi.connectionState == .connected {
-                        if midi.inferredDeviceProfile == nil {
-                            UnknownProfileBar(midi: midi)
-                        }
-                        Group {
-                            switch midi.effectiveDeviceProfile {
-                            case .tp7:
-                                TP7ConnectedPanels(midi: midi)
-                            case .tx6:
-                                TX6ControlsView(midi: midi)
+                        if !customControls.isEmpty {
+                            DynamicDeviceView(controls: customControls, midi: midi)
+                        } else {
+                            if midi.inferredDeviceProfile == nil {
+                                UnknownProfileBar(midi: midi)
+                            }
+                            Group {
+                                switch midi.effectiveDeviceProfile {
+                                case .tp7:
+                                    TP7ConnectedPanels(midi: midi)
+                                case .tx6:
+                                    TX6ControlsView(midi: midi)
+                                }
                             }
                         }
                     } else {
@@ -43,10 +49,44 @@ struct ContentView: View {
                          : "field remote")
                         .font(.system(.headline, design: .monospaced))
                 }
+                if midi.connectionState == .connected {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button { showChartImport = true } label: {
+                            Label("import chart", systemImage: "doc.badge.plus")
+                        }
+                    }
+                    if !customControls.isEmpty {
+                        ToolbarItem(placement: .secondaryAction) {
+                            Button(role: .destructive) {
+                                if let name = midi.connectedDeviceName {
+                                    DeviceControlStore.clear(for: name)
+                                }
+                                customControls = []
+                            } label: {
+                                Label("clear custom controls", systemImage: "trash")
+                            }
+                        }
+                    }
+                }
             }
         }
         .sheet(isPresented: $showDevicePicker) {
             DevicePickerSheet(midi: midi, isPresented: $showDevicePicker)
+        }
+        .sheet(isPresented: $showChartImport) {
+            if let name = midi.connectedDeviceName {
+                ChartImportView(deviceName: name) { controls in
+                    DeviceControlStore.save(controls, for: name)
+                    customControls = controls
+                }
+            }
+        }
+        .onChange(of: midi.connectionState) { _, state in
+            if state == .connected, let name = midi.connectedDeviceName {
+                customControls = DeviceControlStore.controls(for: name)
+            } else if state == .disconnected {
+                customControls = []
+            }
         }
     }
 }
