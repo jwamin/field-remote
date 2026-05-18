@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  field-remote — Icon Composer layer 01: BLE signal arcs
+  Canvas: 1024 × 1024  |  White on transparent  |  Import as a foreground layer.
+  Arc centre: (820, 180). Spans 100 °→170 ° (clockwise in SVG coords),
+  giving a fan that radiates toward the lower-left (icon centre).
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1024 1024" width="1024" height="1024">
+
+  <!-- Source dot at arc origin -->
+  <circle cx="820" cy="180" r="20" fill="#FFFFFF"/>
+
+  <!-- Inner arc  r=90  — full opacity -->
+  <path d="M 804 269 A 90 90 0 0 1 731 196"
+        fill="none" stroke="#FFFFFF" stroke-width="26"
+        stroke-linecap="round"/>
+
+  <!-- Middle arc  r=165  — 72 % opacity -->
+  <path d="M 791 343 A 165 165 0 0 1 658 209"
+        fill="none" stroke="#FFFFFF" stroke-width="26"
+        stroke-linecap="round" opacity="0.72"/>
+
+  <!-- Outer arc  r=240  — 44 % opacity -->
+  <path d="M 778 416 A 240 240 0 0 1 584 222"
+        fill="none" stroke="#FFFFFF" stroke-width="26"
+        stroke-linecap="round" opacity="0.44"/>
+
+</svg>
