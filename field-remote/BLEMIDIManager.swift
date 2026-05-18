@@ -27,6 +27,12 @@ class BLEMIDIManager: NSObject, ObservableObject {
         deviceProfileOverride ?? inferredDeviceProfile ?? .tp7
     }
 
+    /// Best available display name for the currently-connected peripheral.
+    var connectedDeviceName: String? {
+        guard let device = connectedDevice else { return nil }
+        return device.name ?? advertisementLocalNames[device.identifier]
+    }
+
     override init() {
         super.init()
         central = CBCentralManager(delegate: self, queue: .main)
@@ -87,6 +93,11 @@ class BLEMIDIManager: NSObject, ObservableObject {
         send([0xB0 | (channel & 0x0F), number, value & 0x7F])
     }
 
+    /// Program change on a given 0-based channel (0 = ch 1)
+    func programChange(program: UInt8, channel: UInt8 = 0) {
+        send([0xC0 | (channel & 0x0F), program & 0x7F])
+    }
+
     // Convenience wrappers matching the TP-7 MIDI spec
 
     /// Mix volume  CC7  ch 1-6 (pass channel 1-6)
@@ -108,8 +119,14 @@ class BLEMIDIManager: NSObject, ObservableObject {
     /// Loop mode  CC17  0=off 1=in 2=out
     func loopMode(_ mode: UInt8) { cc(17, value: mode) }
 
-    /// Fast fwd / rew  CC18  MIDI value 0-127 (64 = stopped)
+    /// Fast fwd / rew  CC18  MIDI value 0-127 (64 = centre)
+    static let scrubPauseValue: UInt8 = 64
+    /// +4 from centre — normal playback (TP-7 has no dedicated play CC)
+    static let scrubPlayValue: UInt8 = 68
+
     func scrub(_ midiValue: UInt8) { cc(18, value: midiValue) }
+    func scrubPlay()  { scrub(Self.scrubPlayValue) }
+    func scrubPause() { scrub(Self.scrubPauseValue) }
 
     /// Mix mute  CC120  ch 1-6
     func mixMute(_ muted: Bool, channel: Int) {
@@ -176,7 +193,7 @@ class BLEMIDIManager: NSObject, ObservableObject {
 
 // MARK: - CBCentralManagerDelegate
 
-extension BLEMIDIManager: @preconcurrency CBCentralManagerDelegate {
+extension BLEMIDIManager: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .poweredOn:
@@ -211,6 +228,9 @@ extension BLEMIDIManager: @preconcurrency CBCentralManagerDelegate {
         let displayName = peripheral.name
             ?? advertisementLocalNames[peripheral.identifier]
         inferredDeviceProfile = RemoteDeviceProfile.infer(fromName: displayName)
+        if let name = displayName {
+            KnownDevicesStore.record(name: name)
+        }
         peripheral.delegate = self
         peripheral.discoverServices([Self.midiServiceUUID])
     }
@@ -235,7 +255,7 @@ extension BLEMIDIManager: @preconcurrency CBCentralManagerDelegate {
 
 // MARK: - CBPeripheralDelegate
 
-extension BLEMIDIManager: @preconcurrency CBPeripheralDelegate {
+extension BLEMIDIManager: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         peripheral.services?
             .filter { $0.uuid == Self.midiServiceUUID }

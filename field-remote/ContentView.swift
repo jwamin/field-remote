@@ -3,8 +3,10 @@ import CoreBluetooth
 // MARK: - Root
 
 struct ContentView: View {
-    @StateObject private var midi = BLEMIDIManager()
+    @ObservedObject var midi: BLEMIDIManager
     @State private var showDevicePicker = false
+    @State private var showChartImport = false
+    @State private var customControls: [MIDIControlDef] = []
 
     var body: some View {
         NavigationStack {
@@ -13,7 +15,9 @@ struct ContentView: View {
                     ConnectionBar(midi: midi, showPicker: $showDevicePicker)
                         .padding(.bottom, 1)
 
-                    if midi.connectionState == .connected {
+                    if !customControls.isEmpty {
+                        DynamicDeviceView(controls: customControls, midi: midi)
+                    } else if midi.connectionState == .connected {
                         if midi.inferredDeviceProfile == nil {
                             UnknownProfileBar(midi: midi)
                         }
@@ -33,7 +37,9 @@ struct ContentView: View {
             .navigationTitle(midi.connectionState == .connected
                              ? midi.effectiveDeviceProfile.navigationTitle
                              : "field remote")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(midi.connectionState == .connected
@@ -41,10 +47,46 @@ struct ContentView: View {
                          : "field remote")
                         .font(.system(.headline, design: .monospaced))
                 }
+                ToolbarItem(placement: .primaryAction) {
+                    Button { showChartImport = true } label: {
+                        Label("import chart", systemImage: "doc.badge.plus")
+                    }
+                }
+                if !customControls.isEmpty {
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button(role: .destructive) {
+                            if let name = midi.connectedDeviceName {
+                                DeviceControlStore.clear(for: name)
+                            }
+                            customControls = []
+                        } label: {
+                            Label("clear custom controls", systemImage: "trash")
+                        }
+                    }
+                }
             }
         }
         .sheet(isPresented: $showDevicePicker) {
             DevicePickerSheet(midi: midi, isPresented: $showDevicePicker)
+        }
+        .sheet(isPresented: $showChartImport) {
+            ChartImportView(deviceName: midi.connectedDeviceName) { controls in
+                if let name = midi.connectedDeviceName {
+                    DeviceControlStore.save(controls, for: name)
+                }
+                customControls = controls
+            }
+        }
+        .onChange(of: midi.connectionState) { _, state in
+            if state == .connected, let name = midi.connectedDeviceName {
+                let stored = DeviceControlStore.controls(for: name)
+                if !stored.isEmpty {
+                    customControls = stored
+                }
+                // preserve pre-loaded controls when device has no saved layout
+            } else if state == .disconnected {
+                customControls = []
+            }
         }
     }
 }
@@ -155,7 +197,9 @@ private struct DevicePickerSheet: View {
                 }
             }
             .navigationTitle("devices")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("cancel") {
@@ -284,6 +328,16 @@ private struct TransportSection: View {
     var body: some View {
         SectionHeader(title: "transport")
         VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                TransportButton(label: "play", systemImage: "play.fill") {
+                    midi.scrubPlay()
+                }
+                TransportButton(label: "pause", systemImage: "pause.fill") {
+                    midi.scrubPause()
+                }
+            }
+            .padding(.horizontal)
+
             // Rec + Cue Rec toggles
             HStack(spacing: 12) {
                 ToggleButton(label: "rec", isOn: $recOn) { on in
@@ -410,10 +464,17 @@ private struct LoopSection: View {
 
 private struct ScrubSection: View {
     @ObservedObject var midi: BLEMIDIManager
-    // MIDI value 0-127; 64 = centre (stopped)
-    @State private var scrubMidi: Double = 64
+    // MIDI value 0-127; 64 = pause, 68 (+4) = play
+    @State private var scrubMidi: Double = Double(BLEMIDIManager.scrubPauseValue)
 
     var displayValue: Int { Int(scrubMidi) - 64 }
+
+    private var statusLabel: String {
+        let v = UInt8(scrubMidi)
+        if v == BLEMIDIManager.scrubPauseValue { return "pause" }
+        if v == BLEMIDIManager.scrubPlayValue { return "play" }
+        return displayValue > 0 ? "+\(displayValue)" : "\(displayValue)"
+    }
 
     var body: some View {
         SectionHeader(title: "ffwd / rew")
@@ -424,19 +485,32 @@ private struct ScrubSection: View {
             HStack {
                 Text("-64")
                 Spacer()
-                Text(displayValue == 0 ? "stopped" : (displayValue > 0 ? "+\(displayValue)" : "\(displayValue)"))
-                    .foregroundStyle(scrubMidi == 64 ? .tertiary : .primary)
+                Text(statusLabel)
+                    .foregroundStyle(
+                        scrubMidi == Double(BLEMIDIManager.scrubPauseValue)
+                        || scrubMidi == Double(BLEMIDIManager.scrubPlayValue)
+                        ? .tertiary : .primary
+                    )
                 Spacer()
                 Text("+63")
             }
             .font(.system(.caption2, design: .monospaced))
             .foregroundStyle(.tertiary)
             .padding(.horizontal)
-            Button("center") {
-                scrubMidi = 64
-                midi.scrub(64)
+            HStack(spacing: 12) {
+                Button("play") {
+                    scrubMidi = Double(BLEMIDIManager.scrubPlayValue)
+                    midi.scrubPlay()
+                }
+                .frame(maxWidth: .infinity)
+                Button("pause") {
+                    scrubMidi = Double(BLEMIDIManager.scrubPauseValue)
+                    midi.scrubPause()
+                }
+                .frame(maxWidth: .infinity)
             }
             .font(.system(.caption, design: .monospaced))
+            .padding(.horizontal)
             .padding(.bottom, 8)
         }
     }
@@ -529,6 +603,30 @@ private struct InputSection: View {
     }
 }
 
+// MARK: - Transport button (momentary)
+
+private struct TransportButton: View {
+    let label: String
+    let systemImage: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Label(label, systemImage: systemImage)
+                .font(.system(.body, design: .monospaced))
+                .labelStyle(.titleAndIcon)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .background(Color.secondary.opacity(0.1))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 // MARK: - Toggle button
 
 private struct ToggleButton: View {
@@ -610,6 +708,25 @@ private extension Comparable {
 
 // MARK: - Preview
 
-#Preview {
-    ContentView()
+#Preview("disconnected") {
+    ContentView(midi: BLEMIDIManager())
+}
+
+#Preview("TP-7 controls") {
+    ScrollView {
+        TP7ConnectedPanels(midi: BLEMIDIManager())
+    }
+}
+
+#Preview("TP-7 iPhone") {
+    NavigationStack {
+        ScrollView {
+            TP7ConnectedPanels(midi: BLEMIDIManager())
+        }
+        .navigationTitle("tp-7")
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
+    }
+    .frame(width: 390, height: 844)
 }

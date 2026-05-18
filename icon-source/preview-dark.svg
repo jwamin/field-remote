@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  field-remote — Icon Composer reference preview (dark default appearance)
+  NOT imported into Icon Composer. For design reference only.
+  Background colour  #0D0D12  matches the app's near-black aesthetic.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1024 1024" width="1024" height="1024">
+
+  <!-- Background -->
+  <rect width="1024" height="1024" fill="#0D0D12"/>
+
+  <!-- Subtle dot grid (TE aesthetic reference) -->
+  <g fill="#FFFFFF" opacity="0.07">
+    <circle cx="102" cy="102" r="3.5"/><circle cx="205" cy="102" r="3.5"/>
+    <circle cx="307" cy="102" r="3.5"/><circle cx="410" cy="102" r="3.5"/>
+    <circle cx="512" cy="102" r="3.5"/><circle cx="614" cy="102" r="3.5"/>
+    <circle cx="717" cy="102" r="3.5"/><circle cx="819" cy="102" r="3.5"/>
+    <circle cx="922" cy="102" r="3.5"/>
+
+    <circle cx="102" cy="205" r="3.5"/><circle cx="205" cy="205" r="3.5"/>
+    <circle cx="307" cy="205" r="3.5"/><circle cx="410" cy="205" r="3.5"/>
+    <circle cx="512" cy="205" r="3.5"/><circle cx="614" cy="205" r="3.5"/>
+    <circle cx="717" cy="205" r="3.5"/><circle cx="819" cy="205" r="3.5"/>
+    <circle cx="922" cy="205" r="3.5"/>
+
+    <circle cx="102" cy="307" r="3.5"/><circle cx="205" cy="307" r="3.5"/>
+    <circle cx="307" cy="307" r="3.5"/><circle cx="410" cy="307" r="3.5"/>
+    <circle cx="512" cy="307" r="3.5"/><circle cx="614" cy="307" r="3.5"/>
+    <circle cx="717" cy="307" r="3.5"/><circle cx="819" cy="307" r="3.5"/>
+    <circle cx="922" cy="307" r="3.5"/>
+
+    <circle cx="102" cy="410" r="3.5"/><circle cx="205" cy="410" r="3.5"/>
+    <circle cx="307" cy="410" r="3.5"/><circle cx="410" cy="410" r="3.5"/>
+    <circle cx="512" cy="410" r="3.5"/><circle cx="614" cy="410" r="3.5"/>
+    <circle cx="717" cy="410" r="3.5"/><circle cx="819" cy="410" r="3.5"/>
+    <circle cx="922" cy="410" r="3.5"/>
+
+    <circle cx="102" cy="512" r="3.5"/><circle cx="205" cy="512" r="3.5"/>
+    <circle cx="307" cy="512" r="3.5"/><circle cx="410" cy="512" r="3.5"/>
+    <circle cx="512" cy="512" r="3.5"/><circle cx="614" cy="512" r="3.5"/>
+    <circle cx="717" cy="512" r="3.5"/><circle cx="819" cy="512" r="3.5"/>
+    <circle cx="922" cy="512" r="3.5"/>
+
+    <circle cx="102" cy="614" r="3.5"/><circle cx="205" cy="614" r="3.5"/>
+    <circle cx="307" cy="614" r="3.5"/><circle cx="410" cy="614" r="3.5"/>
+    <circle cx="512" cy="614" r="3.5"/><circle cx="614" cy="614" r="3.5"/>
+    <circle cx="717" cy="614" r="3.5"/><circle cx="819" cy="614" r="3.5"/>
+    <circle cx="922" cy="614" r="3.5"/>
+
+    <circle cx="102" cy="717" r="3.5"/><circle cx="205" cy="717" r="3.5"/>
+    <circle cx="307" cy="717" r="3.5"/><circle cx="410" cy="717" r="3.5"/>
+    <circle cx="512" cy="717" r="3.5"/><circle cx="614" cy="717" r="3.5"/>
+    <circle cx="717" cy="717" r="3.5"/><circle cx="819" cy="717" r="3.5"/>
+    <circle cx="922" cy="717" r="3.5"/>
+
+    <circle cx="102" cy="819" r="3.5"/><circle cx="205" cy="819" r="3.5"/>
+    <circle cx="307" cy="819" r="3.5"/><circle cx="410" cy="819" r="3.5"/>
+    <circle cx="512" cy="819" r="3.5"/><circle cx="614" cy="819" r="3.5"/>
+    <circle cx="717" cy="819" r="3.5"/><circle cx="819" cy="819" r="3.5"/>
+    <circle cx="922" cy="819" r="3.5"/>
+
+    <circle cx="102" cy="922" r="3.5"/><circle cx="205" cy="922" r="3.5"/>
+    <circle cx="307" cy="922" r="3.5"/><circle cx="410" cy="922" r="3.5"/>
+    <circle cx="512" cy="922" r="3.5"/><circle cx="614" cy="922" r="3.5"/>
+    <circle cx="717" cy="922" r="3.5"/><circle cx="819" cy="922" r="3.5"/>
+    <circle cx="922" cy="922" r="3.5"/>
+  </g>
+
+  <!-- Layer 01: BLE signal arcs -->
+  <circle cx="820" cy="180" r="20" fill="#FFFFFF"/>
+  <path d="M 804 269 A 90 90 0 0 1 731 196"
+        fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round"/>
+  <path d="M 791 343 A 165 165 0 0 1 658 209"
+        fill="none" stroke="#FFFFFF" stroke-width="26"
+        stroke-linecap="round" opacity="0.72"/>
+  <path d="M 778 416 A 240 240 0 0 1 584 222"
+        fill="none" stroke="#FFFFFF" stroke-width="26"
+        stroke-linecap="round" opacity="0.44"/>
+
+  <!-- Layer 02: "f" letterform -->
+  <path d="M 190 870 L 190 180 L 460 180 Q 510 180 510 240
+           L 510 300 L 310 300 L 310 460 L 490 460
+           L 490 550 L 310 550 L 310 870 Z"
+        fill="#FFFFFF"/>
+
+</svg>
