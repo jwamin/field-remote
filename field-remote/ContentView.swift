@@ -49,7 +49,7 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button { showChartImport = true } label: {
-                        Label("import chart", systemImage: "doc.badge.plus")
+                        Label("import chart", systemImage: "apple.intelligence")
                     }
                 }
                 if !customControls.isEmpty {
@@ -291,7 +291,7 @@ private struct DisconnectedPrompt: View {
                 .foregroundStyle(.tertiary)
             Text(state == .bluetoothOff
                  ? "enable bluetooth to continue"
-                 : "scan to connect to your tp-7 or tx-6")
+                 : "scan to connect to your field device")
                 .font(.system(.body, design: .monospaced))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

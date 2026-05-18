@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  field-remote — Icon Composer layer 02: "f" letterform
+  Canvas: 1024 × 1024  |  White on transparent  |  Import as the top foreground layer.
+  Text converted to outline path. Stem x 190–310, arm to x 510 (rounded terminal),
+  crossbar x 190–490. Geometric, heavy-weight, monospaced feel.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1024 1024" width="1024" height="1024">
+
+  <!--
+    Path breakdown:
+      M 190 870          — bottom-left of stem
+      L 190 180          — up full height (left edge)
+      L 460 180          — top of arm, rightward
+      Q 510 180 510 240  — rounded terminal at top-right of arm
+      L 510 300          — arm right side down
+      L 310 300          — arm bottom, back to stem
+      L 310 460          — stem right side down to crossbar
+      L 490 460          — crossbar top
+      L 490 550          — crossbar right side down
+      L 310 550          — crossbar bottom, back to stem
+      L 310 870          — stem right side to bottom
+      Z                  — close (→ 190 870)
+  -->
+  <path d="M 190 870
+           L 190 180
+           L 460 180
+           Q 510 180 510 240
+           L 510 300
+           L 310 300
+           L 310 460
+           L 490 460
+           L 490 550
+           L 310 550
+           L 310 870
+           Z"
+        fill="#FFFFFF"/>
+
+</svg>
