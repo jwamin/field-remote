@@ -15,20 +15,18 @@ struct ContentView: View {
                     ConnectionBar(midi: midi, showPicker: $showDevicePicker)
                         .padding(.bottom, 1)
 
-                    if midi.connectionState == .connected {
-                        if !customControls.isEmpty {
-                            DynamicDeviceView(controls: customControls, midi: midi)
-                        } else {
-                            if midi.inferredDeviceProfile == nil {
-                                UnknownProfileBar(midi: midi)
-                            }
-                            Group {
-                                switch midi.effectiveDeviceProfile {
-                                case .tp7:
-                                    TP7ConnectedPanels(midi: midi)
-                                case .tx6:
-                                    TX6ControlsView(midi: midi)
-                                }
+                    if !customControls.isEmpty {
+                        DynamicDeviceView(controls: customControls, midi: midi)
+                    } else if midi.connectionState == .connected {
+                        if midi.inferredDeviceProfile == nil {
+                            UnknownProfileBar(midi: midi)
+                        }
+                        Group {
+                            switch midi.effectiveDeviceProfile {
+                            case .tp7:
+                                TP7ConnectedPanels(midi: midi)
+                            case .tx6:
+                                TX6ControlsView(midi: midi)
                             }
                         }
                     } else {
@@ -49,22 +47,20 @@ struct ContentView: View {
                          : "field remote")
                         .font(.system(.headline, design: .monospaced))
                 }
-                if midi.connectionState == .connected {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button { showChartImport = true } label: {
-                            Label("import chart", systemImage: "doc.badge.plus")
-                        }
+                ToolbarItem(placement: .primaryAction) {
+                    Button { showChartImport = true } label: {
+                        Label("import chart", systemImage: "doc.badge.plus")
                     }
-                    if !customControls.isEmpty {
-                        ToolbarItem(placement: .secondaryAction) {
-                            Button(role: .destructive) {
-                                if let name = midi.connectedDeviceName {
-                                    DeviceControlStore.clear(for: name)
-                                }
-                                customControls = []
-                            } label: {
-                                Label("clear custom controls", systemImage: "trash")
+                }
+                if !customControls.isEmpty {
+                    ToolbarItem(placement: .secondaryAction) {
+                        Button(role: .destructive) {
+                            if let name = midi.connectedDeviceName {
+                                DeviceControlStore.clear(for: name)
                             }
+                            customControls = []
+                        } label: {
+                            Label("clear custom controls", systemImage: "trash")
                         }
                     }
                 }
@@ -74,16 +70,20 @@ struct ContentView: View {
             DevicePickerSheet(midi: midi, isPresented: $showDevicePicker)
         }
         .sheet(isPresented: $showChartImport) {
-            if let name = midi.connectedDeviceName {
-                ChartImportView(deviceName: name) { controls in
+            ChartImportView(deviceName: midi.connectedDeviceName) { controls in
+                if let name = midi.connectedDeviceName {
                     DeviceControlStore.save(controls, for: name)
-                    customControls = controls
                 }
+                customControls = controls
             }
         }
         .onChange(of: midi.connectionState) { _, state in
             if state == .connected, let name = midi.connectedDeviceName {
-                customControls = DeviceControlStore.controls(for: name)
+                let stored = DeviceControlStore.controls(for: name)
+                if !stored.isEmpty {
+                    customControls = stored
+                }
+                // preserve pre-loaded controls when device has no saved layout
             } else if state == .disconnected {
                 customControls = []
             }
